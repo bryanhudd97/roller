@@ -1,4 +1,4 @@
-package org.apache.roller.weblogger.ui.core;
+package org.apache.roller.weblogger.business;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -20,7 +20,7 @@ public class DFCache {
 	}
 	
 	public void addItem(String docId, String word){
-		// Add a 
+		// Add a document-word pair to the DF cache
 		Set<String> docSet = map.get(word);
 		if (docSet == null){
 			docSet = new HashSet<String>();
