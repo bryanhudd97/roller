@@ -180,6 +180,10 @@ public interface Weblogger {
 	FeedFetcher getFeedFetcher();
 
 	PlanetManager getPlanetManager();
+	
+	// LAB 2 Addition
+	DFCache getDFCache();
+	// END LAB 2 Additions
 
 	org.apache.roller.planet.business.PlanetURLStrategy getPlanetURLStrategy();
 }
