@@ -137,55 +137,8 @@ public abstract class WebloggerImpl implements Weblogger {
         buildTime = props.getProperty("ro.buildTime", "UNKNOWN");
         buildUser = props.getProperty("ro.buildUser", "UNKNOWN");
         
-        // LAB 2 - Build the DF Cache
-        
-        this.dfCache = new DFCache();
-        List<Weblog> allWeblogs = this.getWeblogManager().getWeblogs(true, true, null, null, 0, Integer.MAX_VALUE);
-        
-        for(Weblog weblog : allWeblogs){
-            try{
-            	String blogName = weblog.getId();
-                List<WeblogEntry> allEntries = weblog.getRecentWeblogEntries(null, 100);
-            	for (WeblogEntry entry : allEntries){
-            		String docId = blogName + entry.getAnchor();
-            		Set<String> wordSet = getWordsFromDocument(entry);
-            		for (String word : wordSet){
-            			this.dfCache.addItem(docId, word);
-            		}
-            	}
-            }
-            catch(Exception e){
-            	System.out.println("Failed to build DF Cache");
-            	System.out.println(e.toString());
-            	System.out.println(e.getMessage());
-            }
-         }
     }
     
-    // LAB 2 - getWordsFromDocument helper function
-    private Set<String> getWordsFromDocument (WeblogEntry entry){
-        
-    	// Create appended string of a weblog entry and all its comments
-        StringBuilder sb = new StringBuilder();
-        sb.append(entry.getText());
-        for(WeblogEntryComment comment : entry.getComments()){
-        	sb.append(" ");
-        	sb.append(comment.getContent());
-        }
-        
-        // Create array of strings by splitting on word boundaries
-    	String[] words = sb.toString().split("\\b|\\W");
-    	
-    	// Create a set of all words in the document
-    	Set<String> set = new HashSet<String>();
-    	for (String word : words){
-    		if (word.isEmpty())
-    			continue; // don't put empty strings on the map
-    		set.add(word);
-    	}
-    	
-    	return set;
-    }
     
     /**
      * 
@@ -410,6 +363,22 @@ public abstract class WebloggerImpl implements Weblogger {
             throw new InitializationException("Error initializing ping systems", e);
         }
         
+        // LAB 2 - Build the DF Cache
+
+        try{
+        	List<Weblog> allWeblogs = this.getWeblogManager().getWeblogs(true, true, null, null, 0, Integer.MAX_VALUE);
+        	this.dfCache = new DFCache(allWeblogs);
+        }
+        catch(Exception e){
+        	System.out.println("Failed to build DF Cache");
+        	System.out.println(e.toString());
+        	System.out.println(e.getMessage());
+        }
+        
+        //System.out.println(dfCache);
+        
+        // END LAB 2 ADDITIONS
+        
         // we always need to do a flush after initialization because it's
         // possible that some changes need to be persisted
         try {
@@ -473,5 +442,6 @@ public abstract class WebloggerImpl implements Weblogger {
     public DFCache getDFCache(){
     	return dfCache;
     }
+    // END LAB 2 ADDITIONS
     
 }
