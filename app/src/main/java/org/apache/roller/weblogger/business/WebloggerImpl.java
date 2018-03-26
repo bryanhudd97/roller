@@ -439,6 +439,10 @@ public abstract class WebloggerImpl implements Weblogger {
     }
     
     // Lab 2 - Getter for the DFCache object
+    
+    // To access this method from anywhere, use:
+    // WebloggerFactory.getWeblogger().getDFCache();
+    
     public DFCache getDFCache(){
     	return dfCache;
     }
